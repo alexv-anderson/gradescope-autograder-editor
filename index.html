@@ -528,6 +528,7 @@
             }
 
             function duplicateRun() {
+                saveCurrentSection();
                 loadRun();
 
                 // Empty and show run name field
@@ -740,6 +741,8 @@
             //#endregion
 
             function show(sectionID) {
+                saveCurrentSection();
+
                 for (let section of document.getElementsByTagName("section")) {
                     if (!section.classList.contains("hide")) {
                         section.classList.add("hide");
@@ -749,12 +752,29 @@
                 document.getElementById(sectionID).classList.remove("hide");
             }
 
+            function saveCurrentSection() {
+                let extractMap = {
+                    files: extractFileChecks,
+                    content: extractContent,
+                    compile: extractCompile,
+                    runs: saveRun
+                }
+
+                for (let section of document.getElementsByTagName("section")) {
+                    if (!section.classList.contains("hide")) {
+                        extractMap[section.id]();
+                    }
+                }
+            }
+
             function addRunEvent() {
                 let tblBdy = document.getElementById("eventTblBdy");
                 tblBdy.appendChild(buildEventRow());
             }
 
             function addRun() {
+                saveCurrentSection();
+
                 // Empty and show run name field
                 let runNameInput = document.getElementById("runName");
                 runNameInput.value = "";
@@ -833,6 +853,8 @@
 
                 // Save
                 document.getElementById("saveBtn").addEventListener("click", function() {
+                    saveCurrentSection();
+
                     let rubric = {
                         version: "v0.2.3",
                         files: files,
@@ -940,7 +962,6 @@
             <section id="files" class="w3-container">
                 <h3>File Checks (Optional)</h3>
                 <p>File system information needed to evaluate a submission</p>
-                <button class="w3-button w3-green" onclick="extractFileChecks()">Save</button>
 
                 <div class="w3-panel w3-card-4 w3-theme">
                     <h4>Requirements</h4>
@@ -1015,7 +1036,6 @@
             <section id="content" class="w3-container">
                 <h3>File Content (Optional)</h3>
                 <p>Describe criteria for the contents of all files.</p>
-                <button class="w3-button w3-green" onclick="extractContent()">Save</button>
 
                 <div class="w3-panel w3-card-4 w3-theme">
                     <h4>Forrbidden</h4>
@@ -1044,7 +1064,6 @@
             <section id="compile" class="w3-container">
                 <h3>Compile (Optional)</h3>
                 <p>The following command will be executed in the submission directory before any tests are run</p>
-                <button id="compileSaveBtn" class="w3-button w3-green" onclick="extractCompile()">Save</button>
                 <div class="w3-panel w3-card-4 w3-theme" style="width: 75%; padding-bottom: 10px; padding-top: 10px;">
                     Command <input id="compileCmd" type="text" class="w3-input w3-border" onchange="updateSiblingCode(this)" /><br/>
                     <code>""</code><br/>
@@ -1063,8 +1082,6 @@
                     <button id="dupRunBtn" class="w3-button w3-green" onclick="duplicateRun()">Duplicate</button>
                     <button class="w3-button w3-green" onclick="addRun()">New Test Case</button>
                 </div>
-
-                <button id="saveRunBtn" class="w3-button w3-green" onclick="saveRun()">Save Current Test Case</button>
 
                 <div class="w3-panel w3-card-4 w3-theme" style="width: 50%; padding-bottom: 10px;">
                     <h3>Settings</h3>
