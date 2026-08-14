@@ -436,12 +436,11 @@
                 document.getElementById("compilePts").value = compile.points;
             }
 
-            function refreshRunSelectOptions() {
+            function refreshRunSelectOptions(selectedValue) {
                 let select = document.getElementById("runSlt");
 
-                let selectedValue = null;
                 while (select.firstChild) {
-                    if (select.firstChild.selected) {
+                    if (selectedValue === undefined && select.firstChild.selected) {
                         selectedValue = select.firstChild.value;
                     }
 
@@ -457,7 +456,7 @@
                     let option = document.createElement("option");
                     option.innerHTML = name;
                     option.value = name;
-                    if (selectedValue === null) {
+                    if (selectedValue === undefined) {
                         option.selected = true;
                         selectedValue = name;
                     }
@@ -467,10 +466,10 @@
                 select.value = selectedValue;
             }
 
-            function loadRun() {
+            function loadRun(value) {
                 show("runs");
 
-                let runName = document.getElementById("runSlt").value;
+                let runName = value === undefined ? document.getElementById("runSlt").value : value;
                 if (!runName) {
                     window.alert("Error: No run name");
                     return;
@@ -772,26 +771,6 @@
                 tblBdy.appendChild(buildEventRow());
             }
 
-            function addRun() {
-                saveCurrentSection();
-
-                // Empty and show run name field
-                let runNameInput = document.getElementById("runName");
-                runNameInput.value = "";
-                runNameInput.disabled = false;
-
-                // Clear run table and add empty row
-                let runTblBdy = document.getElementById("runTblBdy");
-                while (runTblBdy.firstChild) {
-                    runTblBdy.removeChild(runTblBdy.firstChild);
-                }
-
-                addLine();
-
-                // Update UI
-                show("runs");
-            }
-
             function removeEventRows() {
                 removeRows(document.getElementById("eventTblBdy"));
             }
@@ -836,9 +815,19 @@
             function saveRun() {
                 let run = extractRun()
                 if (run.name.trim().length > 0) {
+                    if (runs[run.name] === undefined) {
+                        let opt = document.createElement("option");
+                        opt.innerHTML = run.name;
+                        opt.value = run.name;
+
+                        let select = document.getElementById("runSlt");
+                        select.appendChild(opt);
+                        select.value = run.name;
+                    }
+
                     runs[run.name] = run;
 
-                    refreshRunSelectOptions();
+                    // refreshRunSelectOptions(run.name);
                 } else {
                     window.alert("Cannot save run because the name is blank");
                 }
@@ -919,6 +908,10 @@
                     // Read the file structure as a plain text string
                     reader.readAsText(file);
                 });
+
+                document.getElementById("runSlt").addEventListener("change", function(event) {
+                    loadRun(event.target.value);
+                })
 
                 show("runs");
             });
@@ -1078,9 +1071,7 @@
                 <div class="w3-panel w3-card-4 w3-theme" style="width: 50%;">
                     <h4>Test Case</h4>
                     <select id="runSlt" class="w3-input w3-border" style="margin-bottom: 10px;"></select>
-                    <button id="loadRunBtn" class="w3-button w3-theme-action" onclick="loadRun()">Load</button>
                     <button id="dupRunBtn" class="w3-button w3-green" onclick="duplicateRun()">Duplicate</button>
-                    <button class="w3-button w3-green" onclick="addRun()">New Test Case</button>
                 </div>
 
                 <div class="w3-panel w3-card-4 w3-theme" style="width: 50%; padding-bottom: 10px;">
