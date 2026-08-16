@@ -103,23 +103,48 @@
                 // Required table
                 let req = {};
                 for (let row of document.getElementById("filesReqTblBdy").children) {
-                    extractContentFromRow(req, row);
+                    extractContentFromCheckSelectTextRow(req, row);
                 }
 
+                if (req.names !== undefined) {
+                    if (files.required === undefined) {
+                        files.required = {};
+                    }
+
+                    files.required.names = req.names;
+                }
+
+                // Required pattern table
+                let reqPat = {};
+                for (let row of document.getElementById("filesPatternTblBdy").children) {
+                    extractContentFromCheckCountTextRow(reqPat, row);
+                }
+
+                if (Object.keys(reqPat).length > 0) {
+                    if (files.required === undefined) {
+                        files.required = {}
+                    }
+
+                    files.required.patterns = [];
+                    for (let regex in reqPat) {
+                        files.required.patterns.push({
+                            "pattern": regex,
+                            "count": reqPat[regex]
+                        });
+                    }
+                }
+
+                // Allowed table
                 if (req.allowed !== undefined) {
                     files.allowed = req.allowed;
                     delete req.allowed;
-                }
-
-                if (Object.keys(req).length > 0) {
-                    files.required = req;
                 }
 
                 // Forbidden table
 
                 let forbidden = {};
                 for (let row of document.getElementById("filesForbidTblBdy").children) {
-                    extractContentFromRow(forbidden, row);
+                    extractContentFromCheckSelectTextRow(forbidden, row);
                 }
 
                 if (Object.keys(forbidden).length > 0) {
@@ -153,7 +178,7 @@
 
                 let forbidden = {};
                 for (let row of document.getElementById("contentForbidTblBdy").children) {
-                    extractContentFromRow(forbidden, row);
+                    extractContentFromCheckSelectTextRow(forbidden, row);
                 }
 
                 if (Object.keys(forbidden).length > 0) {
@@ -161,7 +186,27 @@
                 }
             }
 
-            function extractContentFromRow(obj, row) {
+            function extractContentFromCheckTextRow(arr, row) {
+                //                  td           td             input
+                let value = row.firstChild.nextElementSibling.firstChild.value
+                arr.push(value);
+            }
+
+            function extractContentFromCheckCountTextRow(obj, row) {
+                //               td           td              input
+                let cnt = row.firstChild.nextElementSibling.firstChild.value;
+
+                //               td           td                    td           input
+                let txt = row.firstChild.nextElementSibling.nextElementSibling.firstChild.value;
+
+                if (obj[txt] === undefined) {
+                    obj[txt] = 0;
+                }
+
+                obj[txt] += parseInt(cnt);
+            }
+
+            function extractContentFromCheckSelectTextRow(obj, row) {
                 let category = null;
 
                 let i = 0;
@@ -674,12 +719,40 @@
             //#region Files - Requirement Table
             function addFilesReqRow() {
                 document.getElementById("filesReqTblBdy").appendChild(buildCheckSelectAndTextRow(
-                    [{label: "Allowed", value: "allowed"}, {label: "Name", value: "names"}, {label: "Pattern", value: "patterns"}]
+                    [{label: "Name", value: "names"}]
                 ));
             }
 
             function removeFilesReqRow() {
                 removeRows(document.getElementById("filesReqTblBdy"));
+            }
+            //#endregion
+
+            //#region Files - Required Pattern Table
+            function addFilesPatternRow() {
+                let tr = document.createElement("tr");
+
+                // checkbox
+                let chbx = document.createElement("input");
+                chbx.type = "checkbox";
+                tr.appendChild(document.createElement("td"));
+                tr.lastChild.appendChild(chbx);
+
+                // number
+                let cnt = document.createElement("input");
+                cnt.type = "number";
+                cnt.classList.add("w3-input");
+                tr.appendChild(document.createElement("td"));
+                tr.lastChild.appendChild(cnt);
+
+                // pattern
+                tr.appendChild(buildTextCodeCell());
+
+                document.getElementById("filesPatternTblBdy").appendChild(tr);
+            }
+
+            function removeFilesPatternRow() {
+                removeRows(document.getElementById("filesPatternTblBdy"));
             }
             //#endregion
 
@@ -971,6 +1044,26 @@
                     </table>
                     <button class="w3-button w3-green" onclick="addFilesReqRow()">Add Row</button>
                     <button class="w3-button w3-red" onclick="removeFilesReqRow()">Remove Selected Row(s)</button>
+
+                    <p>If a submitted file does not match one of the listed names, then it must match one of the Regular Expressions patterns below.</p>
+                    <table class="w3-table-all">
+                        <colgroup>
+                            <col style="min-width: 10px;" />    <!-- Checkbox -->
+                            <col style="min-width: 50px;" /> <!-- Count -->
+                            <col style="width: 100%;" />    <!-- Pattern -->
+                        </colgroup>
+                        <thead>
+                            <tr class="w3-theme-dark">
+                                <th><input type="checkbox" disabled /></th>
+                                <th>Count</th>
+                                <th>Pattern</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filesPatternTblBdy" class="w3-text-black">
+                        </tbody>
+                    </table>
+                    <button class="w3-button w3-green" onclick="addFilesPatternRow()">Add Row</button>
+                    <button class="w3-button w3-red" onclick="removeFilesPatternRow()">Remove Selected Row(s)</button>
                 </div>
 
                 <div class="w3-panel w3-card-4 w3-theme">
