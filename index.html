@@ -401,27 +401,23 @@
 
             function loadFileChecks() {
                 let tblBdy = document.getElementById("filesReqTblBdy");
-                let sltOpts = [
-                    {label: "Allowed", value: "allowed"}, {label: "Name", value: "names"}, {label: "Pattern", value: "patterns"}
-                ];
-
-                if (files.required !== undefined) {
-                    if (files.required.names !== undefined) {
-                        for (let name of files.required.names) {
-                            tblBdy.appendChild(buildCheckSelectAndTextRow(sltOpts, "names", name));
-                        }
-                    }
-
-                    if (files.required.patterns !== undefined) {
-                        for (let pattern of files.required.patterns) {
-                            tblBdy.appendChild(buildCheckSelectAndTextRow(sltOpts, "patterns", pattern));
-                        }
+                if (files.required !== undefined && files.required.names !== undefined) {
+                    for (let name of files.required.names) {
+                        tblBdy.appendChild(buildCheckTextRow(name));
                     }
                 }
 
+                tblBdy = document.getElementById("filesPatternTblBdy");
+                if (files.required !== undefined && files.required.patterns !== undefined) {
+                    for (let req of files.required.patterns) {
+                        tblBdy.appendChild(buildCheckNumAndTextRow(req.count, req.pattern));
+                    }
+                }
+
+                tblBdy = document.getElementById("filesAllowedTblBdy");
                 if (files.allowed !== undefined) {
-                    for (let allow of files.allowed) {
-                        tblBdy.appendChild(buildCheckSelectAndTextRow(sltOpts, "allowed", allow));
+                    for (let pat of files.allowed) {
+                        tblBdy.appendChild(buildCheckTextRow(pat));
                     }
                 }
 
@@ -687,6 +683,46 @@
              * User DOM Manipulation
              */
 
+            function buildCheckTextRow(text) {
+                let tr = document.createElement("tr");
+
+                // checkbox
+                let chbx = document.createElement("input");
+                chbx.type = "checkbox";
+                tr.appendChild(document.createElement("td"));
+                tr.lastChild.appendChild(chbx);
+
+                // pattern
+                tr.appendChild(buildTextCodeCell({expected: text}));
+
+                return tr;
+            }
+
+            function buildCheckNumAndTextRow(num, text) {
+                let tr = document.createElement("tr");
+
+                // checkbox
+                let chbx = document.createElement("input");
+                chbx.type = "checkbox";
+                tr.appendChild(document.createElement("td"));
+                tr.lastChild.appendChild(chbx);
+
+                // number
+                let cnt = document.createElement("input");
+                cnt.type = "number";
+                cnt.classList.add("w3-input");
+                if (num !== undefined) {
+                    cnt.value = num;
+                }
+                tr.appendChild(document.createElement("td"));
+                tr.lastChild.appendChild(cnt);
+
+                // pattern
+                tr.appendChild(buildTextCodeCell({expected: text}));
+
+                return tr;
+            }
+
             function buildCheckSelectAndTextRow(options, selected, text) {
                 let row = document.createElement("tr");
 
@@ -722,18 +758,7 @@
 
             //#region Files - Requirement Table
             function addFilesReqRow() {
-                let tr = document.createElement("tr");
-
-                // checkbox
-                let chbx = document.createElement("input");
-                chbx.type = "checkbox";
-                tr.appendChild(document.createElement("td"));
-                tr.lastChild.appendChild(chbx);
-
-                // pattern
-                tr.appendChild(buildTextCodeCell());
-
-                document.getElementById("filesReqTblBdy").appendChild(tr);
+                document.getElementById("filesReqTblBdy").appendChild(buildCheckTextRow());
             }
 
             function removeFilesReqRow() {
@@ -743,25 +768,7 @@
 
             //#region Files - Required Pattern Table
             function addFilesPatternRow() {
-                let tr = document.createElement("tr");
-
-                // checkbox
-                let chbx = document.createElement("input");
-                chbx.type = "checkbox";
-                tr.appendChild(document.createElement("td"));
-                tr.lastChild.appendChild(chbx);
-
-                // number
-                let cnt = document.createElement("input");
-                cnt.type = "number";
-                cnt.classList.add("w3-input");
-                tr.appendChild(document.createElement("td"));
-                tr.lastChild.appendChild(cnt);
-
-                // pattern
-                tr.appendChild(buildTextCodeCell());
-
-                document.getElementById("filesPatternTblBdy").appendChild(tr);
+                document.getElementById("filesPatternTblBdy").appendChild(buildCheckNumAndTextRow());
             }
 
             function removeFilesPatternRow() {
@@ -771,18 +778,7 @@
 
             //#region Files - Allowed Table
             function addFilesAllowedRow() {
-                let tr = document.createElement("tr");
-
-                // checkbox
-                let chbx = document.createElement("input");
-                chbx.type = "checkbox";
-                tr.appendChild(document.createElement("td"));
-                tr.lastChild.appendChild(chbx);
-
-                // pattern
-                tr.appendChild(buildTextCodeCell());
-
-                document.getElementById("filesAllowedTblBdy").appendChild(tr);
+                document.getElementById("filesAllowedTblBdy").appendChild(buildCheckTextRow());
             }
 
             function removeFilesAllowedRow() {
