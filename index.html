@@ -135,9 +135,13 @@
                 }
 
                 // Allowed table
-                if (req.allowed !== undefined) {
-                    files.allowed = req.allowed;
-                    delete req.allowed;
+                let allowedPats = [];
+                for (let row of document.getElementById("filesAllowedTblBdy").children) {
+                    extractContentFromCheckTextRow(allowedPats, row);
+                }
+
+                if (allowedPats.length > 0) {
+                    files.allowed = allowedPats;
                 }
 
                 // Forbidden table
@@ -756,6 +760,27 @@
             }
             //#endregion
 
+            //#region Files - Allowed Table
+            function addFilesAllowedRow() {
+                let tr = document.createElement("tr");
+
+                // checkbox
+                let chbx = document.createElement("input");
+                chbx.type = "checkbox";
+                tr.appendChild(document.createElement("td"));
+                tr.lastChild.appendChild(chbx);
+
+                // pattern
+                tr.appendChild(buildTextCodeCell());
+
+                document.getElementById("filesAllowedTblBdy").appendChild(tr);
+            }
+
+            function removeFilesAllowedRow() {
+                removeRows(document.getElementById("filesAllowedTblBdy"));
+            }
+            //#endregion
+
             //#region Files - Forbidden Table
             function addFilesForbidRow() {
                 document.getElementById("filesForbidTblBdy").appendChild(buildCheckSelectAndTextRow(
@@ -1064,6 +1089,28 @@
                     </table>
                     <button class="w3-button w3-green" onclick="addFilesPatternRow()">Add Row</button>
                     <button class="w3-button w3-red" onclick="removeFilesPatternRow()">Remove Selected Row(s)</button>
+                </div>
+
+                <div class="w3-panel w3-card-4 w3-theme">
+                    <h4>Allowed</h4>
+                    <p>If a file matches any of the following patterns, then it will be accepted as part of the submission.</p>
+
+                    <table class="w3-table-all">
+                        <colgroup>
+                            <col style="min-width: 10px;" />    <!-- Checkbox -->
+                            <col style="width: 100%;" />    <!-- Pattern -->
+                        </colgroup>
+                        <thead>
+                            <tr class="w3-theme-dark">
+                                <th><input type="checkbox" disabled /></th>
+                                <th>Pattern</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filesAllowedTblBdy" class="w3-text-black">
+                        </tbody>
+                    </table>
+                    <button class="w3-button w3-green" onclick="addFilesAllowedRow()">Add Row</button>
+                    <button class="w3-button w3-red" onclick="removeFilesAllowedRow()">Remove Selected Row(s)</button>
                 </div>
 
                 <div class="w3-panel w3-card-4 w3-theme">
