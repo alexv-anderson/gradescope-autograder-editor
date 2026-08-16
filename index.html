@@ -101,17 +101,17 @@
 
             function extractFileChecks() {
                 // Required table
-                let req = {};
+                let names = [];
                 for (let row of document.getElementById("filesReqTblBdy").children) {
-                    extractContentFromCheckSelectTextRow(req, row);
+                    extractContentFromCheckTextRow(names, row);
                 }
 
-                if (req.names !== undefined) {
+                if (names !== undefined) {
                     if (files.required === undefined) {
                         files.required = {};
                     }
 
-                    files.required.names = req.names;
+                    files.required.names = names;
                 }
 
                 // Required pattern table
@@ -722,9 +722,18 @@
 
             //#region Files - Requirement Table
             function addFilesReqRow() {
-                document.getElementById("filesReqTblBdy").appendChild(buildCheckSelectAndTextRow(
-                    [{label: "Name", value: "names"}]
-                ));
+                let tr = document.createElement("tr");
+
+                // checkbox
+                let chbx = document.createElement("input");
+                chbx.type = "checkbox";
+                tr.appendChild(document.createElement("td"));
+                tr.lastChild.appendChild(chbx);
+
+                // pattern
+                tr.appendChild(buildTextCodeCell());
+
+                document.getElementById("filesReqTblBdy").appendChild(tr);
             }
 
             function removeFilesReqRow() {
@@ -1054,14 +1063,12 @@
                     <table class="w3-table-all">
                         <colgroup>
                             <col style="min-width: 10px;" />
-                            <col style="width: fit-content;" />
                             <col style="width: 100%;" />
                         </colgroup>
                         <thead>
                             <tr class="w3-theme-dark">
                                 <th><input type="checkbox" disabled /></th>
-                                <th>Logic</th>
-                                <th>Rule</th>
+                                <th>Pattern</th>
                             </tr>
                         </thead>
                         <tbody id="filesReqTblBdy" class="w3-text-black">
