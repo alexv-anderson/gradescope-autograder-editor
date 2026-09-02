@@ -20,6 +20,34 @@ function stdOutRubricFmtChange(input) {
     hideAllChildren("runsStdOutEditor");
 
     document.getElementById(input.value).classList.remove("hide");
+
+    if (input.value === "stdOutExp") {
+        stdOutTblToExp();
+    } else {
+        stdOutExpToTbl();
+    }
+}
+
+
+function stdOutExpToTbl() {
+    let tbl = document.getElementById("runTblBdy");
+    while (tbl.firstChild) {
+        tbl.removeChild(tbl.firstChild);
+    }
+
+    let expTxt = document.getElementById("runTxt");
+
+    for (let l of expTxt.value.split("\n")) {
+        let endsWithInput = l.endsWith("<input>");
+
+        let criterion = {
+            requirement: "pattern",
+            expected: endsWithInput ? l.slice(0, -7) : l,
+            endsWithInput: endsWithInput
+        };
+
+        tbl.appendChild(buildCriterionRow(criterion));
+    }
 }
 
 
@@ -27,17 +55,27 @@ function stdOutTblToExp() {
     let tbl = document.getElementById("runTblBdy");
     let expTxt = document.getElementById("runTxt")
 
-    let criteria = extractCriteria(); // Pulls from table
+    expTxt.value = "";
+
+    let criteria = extractCriteria(tbl); // Pulls from table
+    let criteriaLen = criteria.length;
+
+    let criterionI = 0;
     for (let criterion of criteria) {
         let l = criterion.expected;
 
         if (criterion.endsWithInput) {
-            l += "<input>";
+            l += "<input>\n";
         }
 
-        l += "\n";
+        let lastLine = criterionI+1 === criteriaLen;
+        if (lastLine && l.endsWith("\n")) {
+            l = l.slice(0, -1);
+        }
 
         expTxt.value += l;
+
+        criterionI++;
     }
 }
 
