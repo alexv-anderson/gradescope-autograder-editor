@@ -8,7 +8,7 @@ function hideAllChildren(parentID) {
 }
 
 
-function stdOutFmtChange(input) {
+function stdOutRubricFmtChange(input) {
     hideAllChildren("runsStdOutEditor");
 
     document.getElementById(input.value).classList.remove("hide");
