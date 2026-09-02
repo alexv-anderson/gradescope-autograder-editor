@@ -8,6 +8,16 @@ function hideAllChildren(parentID) {
 }
 
 
+function isStdOutFmtSrc_Rubric() {
+    return document.querySelector("input[name=stdOutFmtSrc]:checked").value === "rubric";
+}
+
+
+function isStdOutFmt_JSON() {
+    return document.querySelector("input[name=stdOutFmtSrc]:checked").value === "stdOutJSON";
+}
+
+
 function stdOutFmtSrcChange(input) {
     hideAllChildren("stdOutFmtSrc");
 

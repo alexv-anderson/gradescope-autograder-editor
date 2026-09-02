@@ -256,6 +256,12 @@
 
             //#region Extract test runs
             function extractRun() {
+                if (isStdOutFmtSrc_Rubric() && !isStdOutFmt_JSON()) {
+                    // The user was editing stdout using the text editor instead of the JSON editor.
+                    // Translate the content of the text editor into the JSON editor criteria editor so it can be extracted.
+                    stdOutExpToTbl();
+                }
+
                 let tbl = document.getElementById("runTblBdy");
 
                 return {
