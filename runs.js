@@ -8,6 +8,14 @@ function hideAllChildren(parentID) {
 }
 
 
+function stdOutFmtSrcChange(input) {
+    hideAllChildren("stdOutFmtSrc");
+
+    let childID = "stdOutFmtSrc_" + input.value;
+    document.getElementById(childID).classList.remove("hide");
+}
+
+
 function stdOutRubricFmtChange(input) {
     hideAllChildren("runsStdOutEditor");
 

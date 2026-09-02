@@ -1205,8 +1205,8 @@
 
                 <div class="w3-panel w3-card-4 w3-theme">
                     <h3>Standard Out Criteria</h3>
-                    <input type="radio" name="stdOutFmtSrc" value="rubric" checked /> In Rubric
-                    <input type="radio" name="stdOutFmtSrc" value="file" /> FilePath
+                    <input type="radio" name="stdOutFmtSrc" value="rubric" onchange="stdOutFmtSrcChange(this)" checked /> In Rubric
+                    <input type="radio" name="stdOutFmtSrc" value="file" onchange="stdOutFmtSrcChange(this)" /> FilePath
 
                     <div id="stdOutFmtSrc">
 
@@ -1251,7 +1251,7 @@
 
                         </div> <!-- stdOutFmtSrc_rubric -->
 
-                        <div id="stdOutFmtSrc_file">
+                        <div id="stdOutFmtSrc_file" class="hide">
                             <p>Enter the file path to either the <code>.json</code> or <code>.expected</code> file.</p>
                         </div> <!-- stdFmtSrc_file -->
 
