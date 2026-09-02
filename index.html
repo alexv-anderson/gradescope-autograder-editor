@@ -6,6 +6,8 @@
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
         <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
 
+        <script type="application/javascript" src="./runs.js"></script>
+
         <script>
             /**
              * Tests
@@ -314,47 +316,6 @@
                 }
             }
 
-            function extractCriteria(tbl) {
-                let criteria = [];
-
-                for (let row of tbl.children) {
-                    let criterion = extractCriterionFromRow(row);
-
-                    criteria.push(criterion);
-                }
-
-                return criteria;
-            }
-
-            function extractCriterionFromRow(row) {
-                let criterion = {};
-
-                let i = 0;
-                for (let datum of row.children) {
-                    let tag = datum.children[0];
-                    if (i === 0) {
-                        // Checkbox
-                    } else if (i === 1) {
-                        criterion.requirement = tag.value;
-                    } else if (i === 2) {
-                        criterion.expected = tag.value;
-                    } else if (i == 3) {
-                        criterion.endsWithInput = tag.checked;
-                    } else {
-                        window.alert("Too many columns in criteria table");
-                    }
-
-                    i++;
-                }
-
-                if (!criterion.endsWithInput) {
-                    criterion.expected += "\n";
-                }
-
-                console.log(criterion);
-
-                return criterion;
-            }
             //#endregion
         </script>
         <script>
@@ -1244,6 +1205,11 @@
 
                 <div class="w3-panel w3-card-4 w3-theme">
                     <h3>Standard Out Criteria</h3>
+                    <input type="radio" name="stdOutFmt" value="stdOutJSON" onchange="stdOutFmtChange(this)" checked /> Table
+                    <input type="radio" name="stdOutFmt" value="stdOutExp" onchange="stdOutFmtChange(this)" /> Expected
+                    <input type="radio" name="stdOutFmt" value="stdOutPath" onchange="stdOutFmtChange(this)" /> File path
+                    <div id="runsStdOutEditor">
+                        <div id="stdOutJSON">
                     <p>
                         Give criteria for all lines written to standard out when the test case's command is executed.<br/>
                         <i>Note: Newline characters will sutomatically be placed at the end of lines which have no input.</i>
@@ -1268,7 +1234,16 @@
                     </table>
                     <button class="w3-button w3-green" onclick="addLine()">Add Line</button>
                     <button class="w3-button w3-red" onclick="removeCriteriaRows()">Delete selected row(s)</button>
-                </div>
+                        </div> <!-- Div for JSON table out editor-->
+                        <div id="stdOutExp" class="hide">
+                            <p><i>About .expected files</i></p>
+                            <textarea id="runTxt"></textarea>
+                        </div> <!-- Div for expected file editor -->
+                        <div id="stdOutPath" class="hide">
+                            <p>Enter the file path to either the <code>.json</code> or <code>.expected</code> file.</p>
+                        </div>  <!-- Div for file path editor-->
+                    </div> <!-- Div for standard out editors-->
+                </div>  <!-- Div for card -->
             </section>
 
             <section id="io" class="w3-container hide">
