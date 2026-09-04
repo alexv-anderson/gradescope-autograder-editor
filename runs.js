@@ -89,6 +89,18 @@ function stdOutTblToExp() {
     }
 }
 
+
+function extractCriteriaPath() {
+    let path = document.getElementById("stdOutFp").value.trim();
+
+    if (path.length === 0) {
+        window.alert("No path was set for test case!\nReturn to fix before exporting.");
+    }
+
+    return path;
+}
+
+
 function extractCriteria(tbl) {
     let criteria = [];
 

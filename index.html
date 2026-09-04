@@ -270,7 +270,7 @@
                     input: document.getElementById("runInFN").value,
                     points: parseFloat(document.getElementById("runPts").value),
                     events: extractEvents(document.getElementById("eventTblBdy")),
-                    criteria: extractCriteria(tbl)
+                    criteria: isStdOutFmtSrc_Rubric() ? extractCriteria(tbl) : extractCriteriaPath()
                 };
             }
 
@@ -1209,7 +1209,7 @@
                     <button class="w3-button w3-red" onclick="removeEventRows()">Remove selected row(s)</button>
                 </div>
 
-                <div class="w3-panel w3-card-4 w3-theme">
+                <div class="w3-panel w3-card-4 w3-theme" style="padding-bottom: 10px;">
                     <h3>Standard Out Criteria</h3>
                     <input type="radio" name="stdOutFmtSrc" value="rubric" onchange="stdOutFmtSrcChange(this)" checked /> In Rubric
                     <input type="radio" name="stdOutFmtSrc" value="file" onchange="stdOutFmtSrcChange(this)" /> FilePath
@@ -1259,6 +1259,7 @@
 
                         <div id="stdOutFmtSrc_file" class="hide">
                             <p>Enter the file path to either the <code>.json</code> or <code>.expected</code> file.</p>
+                            <input id="stdOutFp" class="w3-input w3-border" type="text" />
                         </div> <!-- stdFmtSrc_file -->
 
                     </div> <!-- stdOutFmtSrc -->
