@@ -915,7 +915,7 @@
                     saveCurrentSection();
 
                     let rubric = {
-                        version: "v0.2.3",
+                        version: "v0.3.0",
                         files: files,
                         support: support,
                         content: content,
@@ -1213,6 +1213,7 @@
                     <h3>Standard Out Criteria</h3>
                     <input type="radio" name="stdOutFmtSrc" value="rubric" onchange="stdOutFmtSrcChange(this)" checked /> In Rubric
                     <input type="radio" name="stdOutFmtSrc" value="file" onchange="stdOutFmtSrcChange(this)" /> FilePath
+                    <hr/>
 
                     <div id="stdOutFmtSrc">
 
@@ -1249,7 +1250,14 @@
                                 </div> <!-- Div for JSON table out editor-->
 
                                 <div id="stdOutExp" class="hide">
-                                    <p><i>About .expected files</i></p>
+                                    <p>
+                                        In the text box below enter a regular expression for each line of output from the student's submission.<br/>
+                                        There are two exceptions to this:
+                                        <ul>
+                                            <li>Lines that end with user input should have an <code>&lt;input&gt;</code> tag at the end.</li>
+                                            <li>Lines that should be ignored should start with <code>//</code></li>
+                                        </ul>
+                                    </p>
                                     <textarea id="runTxt" rows="10" cols="30"></textarea>
                                 </div> <!-- Div for expected file editor -->
 

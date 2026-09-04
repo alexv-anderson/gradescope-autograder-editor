@@ -56,6 +56,12 @@ function stdOutExpToTbl() {
             endsWithInput: endsWithInput
         };
 
+        if (l.startsWith("//")) {
+            criterion.requirement = "ignore";
+            delete criterion.expected;
+            delete criterion.endsWithInput;
+        }
+
         tbl.appendChild(buildCriterionRow(criterion));
     }
 }
@@ -72,15 +78,20 @@ function stdOutTblToExp() {
 
     let criterionI = 0;
     for (let criterion of criteria) {
-        let l = criterion.expected;
+        if (criterion.requirement === "ignore") {
+            l = "//"
+        } else {
+            let l = criterion.expected;
 
-        if (criterion.endsWithInput) {
-            l += "<input>\n";
-        }
+            if (criterion.endsWithInput) {
+                l += "<input>\n";
+            }
 
-        let lastLine = criterionI+1 === criteriaLen;
-        if (lastLine && l.endsWith("\n")) {
-            l = l.slice(0, -1);
+            let lastLine = criterionI+1 === criteriaLen;
+            if (lastLine && l.endsWith("\n")) {
+                l = l.slice(0, -1);
+            }
+
         }
 
         expTxt.value += l;
