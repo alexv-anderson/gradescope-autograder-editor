@@ -14,7 +14,7 @@ function isStdOutFmtSrc_Rubric() {
 
 
 function isStdOutFmt_JSON() {
-    return document.querySelector("input[name=stdOutFmtSrc]:checked").value === "stdOutJSON";
+    return document.querySelector("input[name=stdOutFmt]:checked").value === "stdOutJSON";
 }
 
 
