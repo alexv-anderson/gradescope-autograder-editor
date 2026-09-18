@@ -39,6 +39,16 @@ function stdOutRubricFmtChange(input) {
 }
 
 
+function toggleRows(tblBdyID) {
+    let tbl = document.getElementById(tblBdyID);
+    //                  table             colgroup          thead               tr                  th                  input
+    let isChecked = tbl.parentElement.firstElementChild.nextElementSibling.firstElementChild.firstElementChild.firstElementChild.checked;
+    for (let row of tbl.children) {
+        row.firstChild.firstChild.checked = isChecked;
+    }
+}
+
+
 function setCriteriaRows(req) {
     let tbl = document.getElementById("runTblBdy");
 
