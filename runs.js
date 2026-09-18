@@ -39,6 +39,20 @@ function stdOutRubricFmtChange(input) {
 }
 
 
+function setCriteriaRows(req) {
+    let tbl = document.getElementById("runTblBdy");
+
+    for (let row of tbl.children) {
+        let firstTD = row.firstChild;
+        if (!firstTD.firstChild.checked) {
+            continue;   // Row is not checked
+        }
+
+        firstTD.nextElementSibling.firstChild.value = req;
+    }
+}
+
+
 function stdOutExpToTbl() {
     let tbl = document.getElementById("runTblBdy");
     while (tbl.firstChild) {
