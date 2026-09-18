@@ -92,11 +92,11 @@ function stdOutTblToExp() {
 
     let criterionI = 0;
     for (let criterion of criteria) {
+        let l = criterion.expected;
+
         if (criterion.requirement === "ignore") {
             l = "//"
         } else {
-            let l = criterion.expected;
-
             if (criterion.endsWithInput) {
                 l += "<input>\n";
             }
